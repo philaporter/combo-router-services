@@ -1,0 +1,142 @@
+{
+	"info": {
+		"name": "Post Thanksgiving Work",
+		"_postman_id": "0bdb0718-cd15-e546-13d9-81580e0b1c0e",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Microservice 1 Task",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"ownerApp\": \"Transaction Router\",\n    \"createTime\": 0,\n    \"updateTime\": 0,\n    \"createdBy\": \"Philip Porter\",\n    \"updatedBy\": \"Philip Porter\",\n    \"name\": \"basic-microservice-1\",\n    \"description\": \"This is the task associated with the 1st microservice stub\",\n    \"retryCount\": 0,\n    \"timeoutSeconds\": 5,\n    \"inputKeys\": [\n      \"idk-input\"\n    ],\n    \"outputKeys\": [\n      \"idk-output\"\n    ],\n    \"timeoutPolicy\": \"RETRY\",\n    \"retryLogic\": \"FIXED\",\n    \"retryDelaySeconds\": 1,\n    \"responseTimeoutSeconds\": 5,\n    \"concurrentExecLimit\": 0,\n    \"inputTemplate\": {}\n  }\n]"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/metadata/taskdefs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"metadata",
+						"taskdefs"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Microservice 2 Task",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"ownerApp\": \"Transaction Router\",\n    \"createTime\": 0,\n    \"updateTime\": 0,\n    \"createdBy\": \"Philip Porter\",\n    \"updatedBy\": \"Philip Porter\",\n    \"name\": \"basic-microservice-2\",\n    \"description\": \"This is the task associated with the 2nd microservice stub\",\n    \"retryCount\": 0,\n    \"timeoutSeconds\": 5,\n    \"inputKeys\": [\n      \"idk-input\"\n    ],\n    \"outputKeys\": [\n      \"idk-output\"\n    ],\n    \"timeoutPolicy\": \"RETRY\",\n    \"retryLogic\": \"FIXED\",\n    \"retryDelaySeconds\": 1,\n    \"responseTimeoutSeconds\": 5,\n    \"concurrentExecLimit\": 0,\n    \"inputTemplate\": {}\n  }\n]"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/metadata/taskdefs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"metadata",
+						"taskdefs"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Trigger Simple Workflow",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"port\":\"1234\",\n\t\"type\":\"1100\",\n\t\"message\":\"123GCAGzz1337\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/workflow/transaction-workflow",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"workflow",
+						"transaction-workflow"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Simple Workflow",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ownerApp\": \"Transaction Router\",\n  \"createTime\": 0,\n  \"updateTime\": 0,\n  \"createdBy\": \"Philip Porter\",\n  \"updatedBy\": \"Philip Porter\",\n  \"name\": \"transaction-workflow\",\n  \"description\": \"This workflow will trigger two microservices\",\n  \"version\": 0,\n  \"tasks\": [\n    {\n      \"name\": \"basic-microservice-1\",\n      \"taskReferenceName\": \"task-1\",\n      \"description\": \"This task will post to the 1st sample microservice\",\n      \"inputParameters\": {\n      \t\"http_request\": {\n      \t\t\"uri\": \"http://localhost:1111/receive\",\n      \t\t\"method\": \"POST\",\n      \t\t\"body\": {\n      \t\t\t\"port\":\"${workflow.input.port}\",\n      \t        \"type\":\"${workflow.input.type}\",\n      \t        \"message\":\"${workflow.input.message}\"\n      \t\t}\n      \t}\n      },\n      \"type\": \"HTTP\",\n      \"startDelay\": 0\n    },\n    {\n      \"name\": \"basic-microservice-2\",\n      \"taskReferenceName\": \"task-2\",\n      \"description\": \"This task will post to the 2nd sample microservice\",\n      \"inputParameters\": {\n      \t\"http_request\": {\n      \t\t\"uri\": \"http://localhost:2222/receive\",\n      \t\t\"method\": \"POST\",\n      \t\t\"body\": {\n      \t\t\t\"port\":\"${task-1.output.response.body.port}\",\n      \t        \"type\":\"${task-1.output.response.body.type}\",\n      \t        \"message\":\"${task-1.output.response.body.message}\",\n      \t        \"trailer\":\"${task-1.output.response.body.trailer}\"\n      \t\t}\n      \t}\n      },\n      \"type\": \"HTTP\",\n      \"startDelay\": 0\n    }\n  ],\n  \"schemaVersion\": 2\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/metadata/workflow",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"metadata",
+						"workflow"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
