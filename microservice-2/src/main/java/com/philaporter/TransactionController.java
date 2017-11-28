@@ -2,7 +2,6 @@ package com.philaporter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.ArrayList;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +23,7 @@ public class TransactionController {
         try {
             trans = objectMapper.readValue(json, Transaction.class);
         } catch (IOException ex) {
-            System.err.println("Couldn't map the JSON to the Transaction.class attached to 2222");
+            System.err.println("Couldn't map the JSON to the Transaction.class attached to micro-service 2");
         }
         if(trans != null){
             trans.setFinale(Integer.toString(trans.toString().hashCode()));

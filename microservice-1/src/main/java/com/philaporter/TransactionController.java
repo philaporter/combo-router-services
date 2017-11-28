@@ -34,7 +34,7 @@ public class TransactionController {
         try {
             trans = objectMapper.readValue(json, Transaction.class);
         } catch (IOException ex) {
-            System.err.println("Couldn't map the JSON to the Transaction.class attached to 1111");
+            System.err.println("Couldn't map the JSON to the Transaction.class attached to micro-service 1");
         }
         if(trans != null){
             trans.setTrailer(Integer.toString(trans.hashCode()));
@@ -42,6 +42,5 @@ public class TransactionController {
         // ResponseEntity(T body, MultiValueMap<java.lang.String,java.lang.String> headers, HttpStatus status)
         // Create a new HttpEntity with the given body, headers, and status code.
         return new ResponseEntity((trans != null) ? trans.toString() : "{}", HttpStatus.OK);
-//        return new ResponseEntity(HttpStatus.OK);
     }
 }

@@ -1,10 +1,8 @@
 package com.philaporter.transrouter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,10 +12,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -27,8 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransactionController {
     
     private List<Transaction> list;
+    private URL obj;
+    private HttpURLConnection con;
     
-    @GetMapping("/send") // /send?destination=http://localhost:8080/api/workflow/transaction-workflow
+    @GetMapping("/send") // /send?destination=http://localhost:8080/api/workflow/transaction-workflow-port-filter
     public Transaction trigger(@RequestParam String destination) {
         Random random = new Random();
         int index = random.nextInt(list.size() - 1);
@@ -37,8 +34,6 @@ public class TransactionController {
     }
     
     private void postTransaction(Transaction trans, String url) {
-        URL obj = null;
-        HttpURLConnection con = null;
         try {
             obj = new URL(url);
             con = (HttpURLConnection) obj.openConnection();
@@ -58,24 +53,12 @@ public class TransactionController {
             System.out.println("Destination: " + url);
             System.out.println("Request body: " + body);
             System.out.println("Response Code: " + con.getResponseCode());
-
-//            BufferedReader br = new BufferedReader(
-//                new InputStreamReader(
-//                    con.getInputStream()
-//                )
-//            );
-//            String input = "";
-//            StringBuilder response = new StringBuilder();
-//            while(br.ready()) {
-//                input = br.readLine();
-//                response.append(input);
-//            }
-//            br.close();
-//            System.out.println("Response: " + response.toString());
         } catch (MalformedURLException ex) {
             Logger.getLogger(TransactionController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(TransactionController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            con.disconnect();
         }
     }
     

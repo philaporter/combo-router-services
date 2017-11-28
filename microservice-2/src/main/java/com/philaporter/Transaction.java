@@ -14,16 +14,20 @@ public class Transaction {
     private String message;
     private String trailer;
     
+    // hardcoded from the workflow itself, demonstrating workflow path taken
+    private String path;
+    
     // add to the message
     private String finale;
 
     public Transaction() {
     }
 
-    public Transaction(String port, String type, String message, String trailer) {
+    public Transaction(String port, String type, String message, String path, String trailer) {
         this.port = port;
         this.type = type;
         this.message = message;
+        this.path = path;
         this.trailer = trailer;
     }
 
@@ -59,6 +63,14 @@ public class Transaction {
         this.trailer = trailer;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+    
     public String getFinale() {
         return finale;
     }
@@ -69,12 +81,13 @@ public class Transaction {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 97 * hash + Objects.hashCode(this.port);
-        hash = 97 * hash + Objects.hashCode(this.type);
-        hash = 97 * hash + Objects.hashCode(this.message);
-        hash = 97 * hash + Objects.hashCode(this.trailer);
-        hash = 97 * hash + Objects.hashCode(this.finale);
+        int hash = 5;
+        hash = 29 * hash + Objects.hashCode(this.port);
+        hash = 29 * hash + Objects.hashCode(this.type);
+        hash = 29 * hash + Objects.hashCode(this.message);
+        hash = 29 * hash + Objects.hashCode(this.trailer);
+        hash = 29 * hash + Objects.hashCode(this.path);
+        hash = 29 * hash + Objects.hashCode(this.finale);
         return hash;
     }
 
@@ -100,6 +113,9 @@ public class Transaction {
             return false;
         }
         if (!Objects.equals(this.trailer, other.trailer)) {
+            return false;
+        }
+        if (!Objects.equals(this.path, other.path)) {
             return false;
         }
         if (!Objects.equals(this.finale, other.finale)) {
