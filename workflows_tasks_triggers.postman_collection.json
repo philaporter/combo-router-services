@@ -1,0 +1,239 @@
+{
+	"info": {
+		"name": "Workflows/Tasks/Triggers",
+		"_postman_id": "0bdb0718-cd15-e546-13d9-81580e0b1c0e",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Microservice 1 Task",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"ownerApp\": \"Transaction Router\",\n    \"createTime\": 0,\n    \"updateTime\": 0,\n    \"createdBy\": \"Philip Porter\",\n    \"updatedBy\": \"Philip Porter\",\n    \"name\": \"basic-microservice-1\",\n    \"description\": \"This is the task associated with the 1st microservice stub\",\n    \"retryCount\": 0,\n    \"timeoutSeconds\": 5,\n    \"inputKeys\": [\n      \"idk-input\"\n    ],\n    \"outputKeys\": [\n      \"idk-output\"\n    ],\n    \"timeoutPolicy\": \"RETRY\",\n    \"retryLogic\": \"FIXED\",\n    \"retryDelaySeconds\": 1,\n    \"responseTimeoutSeconds\": 5,\n    \"concurrentExecLimit\": 0,\n    \"inputTemplate\": {}\n  }\n]"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/metadata/taskdefs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"metadata",
+						"taskdefs"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Microservice 2 Task",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"ownerApp\": \"Transaction Router\",\n    \"createTime\": 0,\n    \"updateTime\": 0,\n    \"createdBy\": \"Philip Porter\",\n    \"updatedBy\": \"Philip Porter\",\n    \"name\": \"basic-microservice-2\",\n    \"description\": \"This is the task associated with the 2nd microservice stub\",\n    \"retryCount\": 0,\n    \"timeoutSeconds\": 5,\n    \"inputKeys\": [\n      \"idk-input\"\n    ],\n    \"outputKeys\": [\n      \"idk-output\"\n    ],\n    \"timeoutPolicy\": \"RETRY\",\n    \"retryLogic\": \"FIXED\",\n    \"retryDelaySeconds\": 1,\n    \"responseTimeoutSeconds\": 5,\n    \"concurrentExecLimit\": 0,\n    \"inputTemplate\": {}\n  }\n]"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/metadata/taskdefs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"metadata",
+						"taskdefs"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Trigger Simple Workflow",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"port\":\"1111\",\n\t\"type\":\"1100\",\n\t\"message\":\"123GCAGzz1337\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/workflow/transaction-workflow",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"workflow",
+						"transaction-workflow"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Simple Workflow",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ownerApp\": \"Transaction Router\",\n  \"createTime\": 0,\n  \"updateTime\": 0,\n  \"createdBy\": \"Philip Porter\",\n  \"updatedBy\": \"Philip Porter\",\n  \"name\": \"transaction-workflow\",\n  \"description\": \"This workflow will trigger two microservices\",\n  \"version\": 0,\n  \"tasks\": [\n    {\n      \"name\": \"basic-microservice-1\",\n      \"taskReferenceName\": \"task-1\",\n      \"description\": \"This task will post to the 1st sample microservice\",\n      \"inputParameters\": {\n      \t\"http_request\": {\n      \t\t\"uri\": \"http://localhost:1111/receive\",\n      \t\t\"method\": \"POST\",\n      \t\t\"body\": {\n      \t\t\t\"port\":\"${workflow.input.port}\",\n      \t        \"type\":\"${workflow.input.type}\",\n      \t        \"message\":\"${workflow.input.message}\"\n      \t\t}\n      \t}\n      },\n      \"type\": \"HTTP\",\n      \"startDelay\": 0\n    },\n    {\n      \"name\": \"basic-microservice-2\",\n      \"taskReferenceName\": \"task-2\",\n      \"description\": \"This task will post to the 2nd sample microservice\",\n      \"inputParameters\": {\n      \t\"http_request\": {\n      \t\t\"uri\": \"http://localhost:2222/receive\",\n      \t\t\"method\": \"POST\",\n      \t\t\"body\": {\n      \t\t\t\"port\":\"${task-1.output.response.body.port}\",\n      \t        \"type\":\"${task-1.output.response.body.type}\",\n      \t        \"message\":\"${task-1.output.response.body.message}\",\n      \t        \"trailer\":\"${task-1.output.response.body.trailer}\"\n      \t\t}\n      \t}\n      },\n      \"type\": \"HTTP\",\n      \"startDelay\": 0\n    }\n  ],\n  \"schemaVersion\": 2\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/metadata/workflow",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"metadata",
+						"workflow"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Complex Task",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[{\r\n  \"name\": \"filter-port\",\r\n  \"taskReferenceName\": \"filter-port\",\r\n  \"inputParameters\": {\r\n    \"port\": \"${workflow.input.port}\"\r\n  },\r\n  \"type\": \"DECISION\",\r\n  \"caseValueParam\": \"port\",\r\n  \"decisionCases\": {\r\n    \"1111\": [{\r\n        \"type\": \"HTTP\",\r\n        \"name\": \"port-path-validator\",\r\n        \"taskReferenceName\": \"port-path-validator\",\r\n        \"inputParameters\": {\r\n          \"http_request\": {\r\n            \"uri\": \"http://localhost:1122/1111\",\r\n            \"method\": \"GET\"\r\n          }\r\n        }\r\n      },\r\n      {\r\n        \"name\": \"basic-microservice-1\",\r\n        \"taskReferenceName\": \"basic-microservice-1\",\r\n        \"inputParameters\": {\r\n          \"http_request\": {\r\n            \"uri\": \"http://localhost:1111/receive\",\r\n            \"method\": \"POST\",\r\n            \"body\": {\r\n              \"port\": \"${workflow.input.port}\",\r\n              \"type\": \"${workflow.input.type}\",\r\n              \"message\": \"${workflow.input.message}\"\r\n            }\r\n          },\r\n          \"type\": \"HTTP\"\r\n        }\r\n      },\r\n      {\r\n        \"name\": \"basic-microservice-2\",\r\n        \"taskReferenceName\": \"basic-microservice-2\",\r\n        \"inputParameters\": {\r\n          \"http_request\": {\r\n            \"uri\": \"http://localhost:2222/receive\",\r\n            \"method\": \"POST\",\r\n            \"body\": {\r\n              \"port\": \"${basic-microservice-1.output.response.body.port}\",\r\n              \"type\": \"${basic-microservice-1.output.response.body.type}\",\r\n              \"message\": \"${basic-microservice-1.output.response.body.message}\",\r\n              \"trailer\": \"${basic-microservice-1.output.response.body.trailer}\"\r\n            }\r\n          }\r\n        },\r\n        \"type\": \"HTTP\"\r\n      }\r\n    ],\r\n    \"2222\": [{\r\n        \"type\": \"HTTP\",\r\n        \"name\": \"port-path-validator\",\r\n        \"taskReferenceName\": \"port-path-validator\",\r\n        \"inputParameters\": {\r\n          \"http_request\": {\r\n            \"uri\": \"http://localhost:1122/2222\",\r\n            \"method\": \"GET\"\r\n          }\r\n        }\r\n      },\r\n      {\r\n        \"name\": \"basic-microservice-1\",\r\n        \"taskReferenceName\": \"basic-microservice-1\",\r\n        \"inputParameters\": {\r\n          \"http_request\": {\r\n            \"uri\": \"http://localhost:1111/receive\",\r\n            \"method\": \"POST\",\r\n            \"body\": {\r\n              \"port\": \"${workflow.input.port}\",\r\n              \"type\": \"${workflow.input.type}\",\r\n              \"message\": \"${workflow.input.message}\"\r\n            }\r\n          },\r\n          \"type\": \"HTTP\"\r\n        }\r\n      },\r\n      {\r\n        \"name\": \"basic-microservice-2\",\r\n        \"taskReferenceName\": \"basic-microservice-2\",\r\n        \"inputParameters\": {\r\n          \"http_request\": {\r\n            \"uri\": \"http://localhost:2222/receive\",\r\n            \"method\": \"POST\",\r\n            \"body\": {\r\n              \"port\": \"${basic-microservice-1.output.response.body.port}\",\r\n              \"type\": \"${basic-microservice-1.output.response.body.type}\",\r\n              \"message\": \"${basic-microservice-1.output.response.body.message}\",\r\n              \"trailer\": \"${basic-microservice-1.output.response.body.trailer}\"\r\n            }\r\n          }\r\n        },\r\n        \"type\": \"HTTP\"\r\n      }\r\n    ]\r\n  }\r\n}]"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/metadata/taskdefs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"metadata",
+						"taskdefs"
+					]
+				},
+				"description": "This task will take one of two paths depending on the port that's posted to conductor"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Complex Workflow",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ownerApp\": \"Transaction Router\",\n  \"createTime\": 0,\n  \"updateTime\": 0,\n  \"createdBy\": \"Philip Porter\",\n  \"updatedBy\": \"Philip Porter\",\n  \"name\": \"transaction-workflow-port-filter\",\n  \"description\": \"This workflow will trigger two microservices after filtering based on port\",\n  \"version\": 0,\n  \"tasks\": [\n    {\n  \"name\": \"filter-port\",\n  \"taskReferenceName\": \"filter-port\",\n  \"inputParameters\": {\n    \"port\": \"${workflow.input.port}\"\n  },\n  \"type\": \"DECISION\",\n  \"caseValueParam\": \"port\",\n  \"decisionCases\": {\n    \"1111\": [{\n        \"type\": \"HTTP\",\n        \"name\": \"port-path-validator\",\n        \"taskReferenceName\": \"port-path-validator\",\n        \"inputParameters\": {\n          \"http_request\": {\n            \"uri\": \"http://localhost:1122/1111\",\n            \"method\": \"GET\"\n          }\n        }\n      },\n      {\n      \"type\": \"HTTP\",\n        \"name\": \"basic-microservice-1\",\n        \"taskReferenceName\": \"basic-microservice-1\",\n        \"inputParameters\": {\n          \"http_request\": {\n            \"uri\": \"http://localhost:1111/receive\",\n            \"method\": \"POST\",\n            \"body\": {\n              \"port\": \"${workflow.input.port}\",\n              \"type\": \"${workflow.input.type}\",\n              \"message\": \"${workflow.input.message}\"\n            }\n          }\n        }\n      },\n      {\n        \"type\": \"HTTP\",\n        \"name\": \"basic-microservice-2\",\n        \"taskReferenceName\": \"basic-microservice-2\",\n        \"inputParameters\": {\n          \"http_request\": {\n            \"uri\": \"http://localhost:2222/receive\",\n            \"method\": \"POST\",\n            \"body\": {\n              \"port\": \"${basic-microservice-1.output.response.body.port}\",\n              \"type\": \"${basic-microservice-1.output.response.body.type}\",\n              \"message\": \"${basic-microservice-1.output.response.body.message}\",\n              \"trailer\": \"${basic-microservice-1.output.response.body.trailer}\"\n            }\n          }\n        }\n      }\n    ],\n    \"2222\": [{\n        \"type\": \"HTTP\",\n        \"name\": \"port-path-validator\",\n        \"taskReferenceName\": \"port-path-validator\",\n        \"inputParameters\": {\n          \"http_request\": {\n            \"uri\": \"http://localhost:1122/2222\",\n            \"method\": \"GET\"\n          }\n        }\n      },\n      {\n      \"type\": \"HTTP\",\n        \"name\": \"basic-microservice-1\",\n        \"taskReferenceName\": \"basic-microservice-1\",\n        \"inputParameters\": {\n          \"http_request\": {\n            \"uri\": \"http://localhost:1111/receive\",\n            \"method\": \"POST\",\n            \"body\": {\n              \"port\": \"${workflow.input.port}\",\n              \"type\": \"${workflow.input.type}\",\n              \"message\": \"${workflow.input.message}\"\n            }\n          }\n        }\n      },\n      {\n        \"type\": \"HTTP\",\n        \"name\": \"basic-microservice-2\",\n        \"taskReferenceName\": \"basic-microservice-2\",\n        \"inputParameters\": {\n          \"http_request\": {\n            \"uri\": \"http://localhost:2222/receive\",\n            \"method\": \"POST\",\n            \"body\": {\n              \"port\": \"${basic-microservice-1.output.response.body.port}\",\n              \"type\": \"${basic-microservice-1.output.response.body.type}\",\n              \"message\": \"${basic-microservice-1.output.response.body.message}\",\n              \"trailer\": \"${basic-microservice-1.output.response.body.trailer}\"\n            }\n          }\n        }\n      }\n    ]\n  }\n}\n  ],\n  \"schemaVersion\": 2\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/metadata/workflow",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"metadata",
+						"workflow"
+					]
+				},
+				"description": "This workflow has a DECISION point defined that will filter based on the posted port input. The port dictates the path of the workflow execution."
+			},
+			"response": []
+		},
+		{
+			"name": "Create Port Path Validator Task",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"ownerApp\": \"Transaction Router\",\n    \"createTime\": 0,\n    \"updateTime\": 0,\n    \"createdBy\": \"Philip Porter\",\n    \"updatedBy\": \"Philip Porter\",\n    \"name\": \"port-path-validator\",\n    \"description\": \"This is the task associated with the validating the workflow path\",\n    \"retryCount\": 0,\n    \"timeoutSeconds\": 2,\n    \"inputKeys\": [\n      \"idk-input\"\n    ],\n    \"outputKeys\": [\n      \"idk-output\"\n    ],\n    \"timeoutPolicy\": \"RETRY\",\n    \"retryLogic\": \"FIXED\",\n    \"retryDelaySeconds\": 1,\n    \"responseTimeoutSeconds\": 2,\n    \"concurrentExecLimit\": 0,\n    \"inputTemplate\": {}\n  }\n]"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/metadata/taskdefs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"metadata",
+						"taskdefs"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
