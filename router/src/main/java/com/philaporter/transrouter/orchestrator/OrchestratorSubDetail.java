@@ -1,18 +1,18 @@
-package com.philaporter.transrouter;
+package com.philaporter.transrouter.orchestrator;
 
 /**
  * @author Philip Porter
  */
-public class Orchestrator {
+public class OrchestratorSubDetail {
     
     private String hostname;
     private String port;
     
-    public Orchestrator() {
+    public OrchestratorSubDetail() {
         
     }
 
-    public Orchestrator(String hostname, String port) {
+    public OrchestratorSubDetail(String hostname, String port) {
         this.hostname = hostname;
         this.port = port;
     }

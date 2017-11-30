@@ -1,4 +1,4 @@
-package com.philaporter.transrouter;
+package com.philaporter.transrouter.orchestrator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,9 +6,9 @@ import java.util.Map;
 /**
  * @author Philip Porter
  */
-public class OrchestratorDetails {
+public class Orchestrator {
     
-    // Could very easily pulled from / saved down to a table in a relational db
+    // Could very easily pull from / save to a table in a relational db
     // This internal object structure using maps could still be viable, but we would
     // want to include a step at the point of initialization to take all the details 
     // from the relational database and create the maps. then we would want to update
@@ -18,7 +18,7 @@ public class OrchestratorDetails {
     private String hostname;
     
     // Initialize the OrchestratorDetails object with tracking details
-    public OrchestratorDetails(String hostname, Map listOfPorts) {
+    public Orchestrator(String hostname, Map listOfPorts) {
         this.hostname = hostname;
         this.listOfPorts = listOfPorts;
     }
@@ -43,7 +43,7 @@ public class OrchestratorDetails {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("Hostname: "+hostname + "\n");
+        StringBuilder sb = new StringBuilder("Hostname: "+ hostname + "\n");
         listOfPorts.entrySet().forEach((entry) -> {
             sb.append(entry.getKey()).append(": ")
                     .append(entry.getValue()).append("\n");
